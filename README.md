@@ -4,7 +4,7 @@ A note taker
 
 ## Website
 
-[Cleck Here to Visit the Deployed Site](https://ohsweetwampum.github.io/weather-dashboard/)
+[Cleck Here to Visit the Deployed Site](https://ohsweetwampum.github.io/note-taker/)
 
 ## Description
 
@@ -120,7 +120,11 @@ Matthew Gibson
 
 ## Questions
 
+If you have any questions about this application, please contact me at [mtgibson888@gmail.com](mailto:mtgibson888@gmail.com) or check out my [GitHub Profile](https://github.com/ohSweetWampum)
+
 ## License
+
+This application is covered by the MIT license
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
