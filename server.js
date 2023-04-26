@@ -1,18 +1,29 @@
+
+///variables///////////
+
 // Import express package
 const express = require('express');
-const path = require('path');
-
-// Require the JSON file and assign it to a variable called `termData`
-const dbData = require('./db.json');
-const PORT = 3001;
-
 // Initialize our app variable by setting it to the value of express()
 const app = express();
+//port will be 3000
+const PORT = 3000;
+//will be using absolute path to public directory at some point
+const path = require('path');
+// Require the JSON file and assign it to a variable called `noteData`
+const noteData = require('/db.json');
 
+
+////////////setting up middleware //////////
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
-// Add a static middleware for serving assets in the public folder
-app.use(express.static('public'));
+//parse incoming request bodies that contain URL-encoded data.
+app.use(express.urlencoded({ extended: true }));
+//parse incoming request bodies that contain JSON data
+app.use(express.json());
+
+
+
+
 
 
 
