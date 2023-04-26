@@ -6,7 +6,7 @@ const express = require('express');
 // Initialize our app variable by setting it to the value of express()
 const app = express();
 //port will be 3000
-const PORT = 3000;
+var PORT = process.env.PORT || 3000;
 //will be using absolute path to public directory at some point
 const path = require('path');
 // Require the JSON file and assign it to a variable called `noteData`
