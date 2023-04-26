@@ -12,6 +12,10 @@ const path = require('path');
 // Require the JSON file and assign it to a variable called `noteData`
 const noteData = require('/db.json');
 
+const apiRoutes = require('./routes/apiRoutes');
+const htmlRoutes = require('./routes/htmlRoutes');
+
+
 
 ////////////setting up middleware //////////
 // Serve static files from the 'public' directory
@@ -20,9 +24,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 //parse incoming request bodies that contain JSON data
 app.use(express.json());
+//middleware for routes
+app.use('/api', apiRoutes);
+app.use('/', htmlRoutes);
 
 
 
+
+const apiRoutes = require('./routes/apiRoutes');
+const htmlRoutes = require('./routes/htmlRoutes');
 
 
 
