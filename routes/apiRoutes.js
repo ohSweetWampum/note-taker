@@ -40,22 +40,24 @@ notes.delete('/:note_id', (req, res) => {
       const result = json.filter((note) => note.note_id !== noteId);
 
       // Save that array to the filesystem
-      writeToFile('./db/notes.json', result);
+      readAndAppend(result, './db/notes.json'); // <-- Change this line
 
       // Respond to the DELETE request
       res.json(`Item ${noteId} has been deleted 🗑️`);
     });
 });
 
+
 // POST Route for a new note
 notes.post('/', (req, res) => {
   console.log(req.body);
 
-  const { note } = req.body;
+  const { title, text } = req.body;
 
   if (req.body) {
     const newNote = {
-     
+      title: title,
+      text: text,
       note_id: uuidv4(),
     };
 
@@ -66,7 +68,6 @@ notes.post('/', (req, res) => {
   }
 });
 
-module.exports = notes;
 
 
 
