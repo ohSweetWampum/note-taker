@@ -3,9 +3,10 @@
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const express = require('express');
-const notes = express.Router();
+const notes = express.Router({mergeParams: true});
+
 const { readFromFile, readAndAppend } = require('../helpers/notesHelper.js');
-const dbPath = path.join(__dirname, '../db.json');
+const dbPath = path.join(__dirname, './db/db.json');
 
 
 // Add middleware to parse JSON in the request body
@@ -14,7 +15,7 @@ notes.use(express.json());
 
 // GET Route for retrieving all the notes
 notes.get('/', (req, res) => {
-  readFromFile('./db/notes.json').then((data) => res.json(JSON.parse(data)));
+  readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
 });
 
 // GET Route for a specific note
@@ -33,14 +34,14 @@ notes.get('/:note_id', (req, res) => {
 // DELETE Route for a specific note
 notes.delete('/:note_id', (req, res) => {
   const noteId = req.params.note_id;
-  readFromFile('./db/notes.json')
+  readFromFile('./db/db.json')
     .then((data) => JSON.parse(data))
     .then((json) => {
       // Make a new array of all notes except the one with the ID provided in the URL
       const result = json.filter((note) => note.note_id !== noteId);
 
       // Save that array to the filesystem
-      readAndAppend(result, './db/notes.json'); // <-- Change this line
+      readAndAppend(result, './db/db.json'); // <-- Change this line
 
       // Respond to the DELETE request
       res.json(`Item ${noteId} has been deleted 🗑️`);
@@ -61,7 +62,7 @@ notes.post('/', (req, res) => {
       note_id: uuidv4(),
     };
 
-    readAndAppend(newNote, './db/notes.json');
+    readAndAppend(newNote, './db/db.json');
     res.json(`Note added successfully`);
   } else {
     res.error('Error in adding note');

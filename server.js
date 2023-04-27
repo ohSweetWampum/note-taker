@@ -10,6 +10,14 @@ const noteData = JSON.parse(fs.readFileSync('./db.json', 'utf8'));
 const app = express();
 var PORT = process.env.PORT || 3000;
 
+const htmlRoutes = require('./routes/htmlRoutes');
+const notesRoutes = require('./routes/notesRoutes');
+
+app.use('/', htmlRoutes);
+app.use('/api/notes', notesRoutes);
+
+
+
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
