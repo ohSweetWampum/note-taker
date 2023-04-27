@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 // Read the JSON file and assign it to a variable called `noteData`
-const noteData = JSON.parse(fs.readFileSync('./db.json', 'utf8'));
+const noteData = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
 
 // Initialize app and set port
 const app = express();
