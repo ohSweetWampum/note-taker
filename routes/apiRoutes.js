@@ -7,12 +7,12 @@ const { readFromFile, writeToFile } = require('../helpers/notesHelper.js');
 const dbPath = path.join(__dirname, '../db/db.json');
 
 // GET Route for retrieving all the notes
-notes.get('/', (req, res) => {
+notes.get('/api/notes', (req, res) => {
   readFromFile(dbPath).then((data) => res.json(JSON.parse(data)));
 });
 
 // GET Route for a specific note
-notes.get('/:note_id', (req, res) => {
+notes.get('/api/notes/:note_id', (req, res) => {
   const noteId = req.params.note_id;
   readFromFile(dbPath)
     .then((data) => JSON.parse(data))
@@ -25,7 +25,7 @@ notes.get('/:note_id', (req, res) => {
 });
 
 // DELETE Route for a specific note
-notes.delete('/:note_id', (req, res) => {
+notes.delete('/api/notes/:note_id', (req, res) => {
   const noteId = req.params.note_id;
   readFromFile(dbPath)
     .then((data) => JSON.parse(data))
@@ -37,12 +37,12 @@ notes.delete('/:note_id', (req, res) => {
       writeToFile(dbPath, result);
 
       // Respond to the DELETE request
-      res.json(`Item ${noteId} has been deleted 🗑️`);
+      res.json(`Item ${noteId} has been deleted `);
     });
 });
 
 // POST Route for a new note
-notes.post('/', (req, res) => {
+notes.post('/api/notes', (req, res) => {
   console.log(req.body);
 
   const { title, text } = req.body;
@@ -62,13 +62,17 @@ notes.post('/', (req, res) => {
         return writeToFile(dbPath, json);
       })
       .then(() => res.json(`Note added successfully`))
-      .catch((err) => res.status(500).json('Error in adding note'));
+      .catch((err) => {
+        console.error(err); // Log the error to the console
+        res.status(500).json(`Error in adding note`);
+      });
   } else {
     res.status(400).json('Error in adding note');
   }
 });
 
 module.exports = notes;
+
 
 
 
