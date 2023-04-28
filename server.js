@@ -1,7 +1,7 @@
 // Import required packages and define variables
 const express = require('express');
 const path = require('path');
-
+const fs = require('fs');
 // Initialize app and set port
 const app = express();
 var PORT = process.env.PORT || 3001;
@@ -16,8 +16,10 @@ const htmlRoutes = require('./routes/htmlRoutes');
 const notesRoutes = require('./routes/apiRoutes');
 
 // Use the imported routes
+app.use('/api', notesRoutes);
 app.use('/', htmlRoutes);
-app.use('/', notesRoutes);
+
+
 
 
 // Add listener/start the server

@@ -1,34 +1,22 @@
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const express = require('express');
-const notes = express.Router({mergeParams: true});
+const notes = express.Router();
+const {readFromFile, readAndAppend, writeToFile } = require("../helpers/notesHelper")
 
-const { readFromFile, readAndAppend, writeToFile } = require('../helpers/notesHelper.js');
+// const { readFromFile, readAndAppend, writeToFile } = require('../helpers/notesHelper.js');
 
 const dbPath = path.join(__dirname, '../db/db.json');
 
 // GET Route for retrieving all the notes
-notes.get('/api/notes', (req, res) => {
+notes.get('/notes', (req, res) => {
+  console.log(dbPath);
   readFromFile(dbPath).then((data) => res.json(JSON.parse(data)));
 });
 
-// GET Route for a specific note
-notes.get('/api/notes/:note_id', (req, res) => {
-  const noteId = req.params.note_id;
-  readFromFile(dbPath)
-    .then((data) => JSON.parse(data))
-    .then((json) => {
-      const result = json.filter((note) => note.note_id === noteId);
-      return result.length > 0
-        ? res.json(result)
-        : res.json('No note with that ID');
-    });
-});
-
-
 
 // POST Route for a new note
-notes.post('/', (req, res) => {
+notes.post('/notes', (req, res) => {
   console.log(req.body);
 
   const { title, text } = req.body;
@@ -37,7 +25,7 @@ notes.post('/', (req, res) => {
     const newNote = {
       title: title,
       text: text,
-      note_id: uuidv4(),
+      id: uuidv4(),
     };
 
     // Use the helper function to read and append the new note
@@ -51,13 +39,14 @@ notes.post('/', (req, res) => {
 
 
 // DELETE Route for a specific note
-notes.delete('/api/notes/:note_id', (req, res) => {
-  const noteId = req.params.note_id;
+notes.delete('/notes/:id', (req, res) => {
+  const noteId = req.params.id;
+  console.log(noteId)
   readFromFile(dbPath)
     .then((data) => JSON.parse(data))
     .then((json) => {
       // Make a new array of all notes except the one with the ID provided in the URL
-      const result = json.filter((note) => note.note_id !== noteId);
+      const result = json.filter((note) => note.id !== noteId);
 
       // Save that array to the filesystem
       writeToFile(dbPath, result);
