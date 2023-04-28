@@ -12,6 +12,8 @@ This app displays the current day's weather as weel as the 5-day forecast for a 
 
 ## Installation
 
+d
+
 ## Table of Contents
 
 - [Website](#website)
