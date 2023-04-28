@@ -8,7 +8,7 @@ const noteData = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
 
 // Initialize app and set port
 const app = express();
-var PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 3001;
 
 const htmlRoutes = require('./routes/htmlRoutes');
 const notesRoutes = require('./routes/notesRoutes');
