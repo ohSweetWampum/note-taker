@@ -1,27 +1,20 @@
-
-
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const express = require('express');
 const notes = express.Router({mergeParams: true});
 
-const { readFromFile, readAndAppend } = require('../helpers/notesHelper.js');
-const dbPath = path.join(__dirname, './db/db.json');
-
-
-// Add middleware to parse JSON in the request body
-notes.use(express.json());
-
+const { readFromFile, writeToFile } = require('../helpers/notesHelper.js');
+const dbPath = path.join(__dirname, '../db/db.json');
 
 // GET Route for retrieving all the notes
 notes.get('/', (req, res) => {
-  readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
+  readFromFile(dbPath).then((data) => res.json(JSON.parse(data)));
 });
 
 // GET Route for a specific note
 notes.get('/:note_id', (req, res) => {
   const noteId = req.params.note_id;
-  readFromFile('./db/db.json')
+  readFromFile(dbPath)
     .then((data) => JSON.parse(data))
     .then((json) => {
       const result = json.filter((note) => note.note_id === noteId);
@@ -34,20 +27,19 @@ notes.get('/:note_id', (req, res) => {
 // DELETE Route for a specific note
 notes.delete('/:note_id', (req, res) => {
   const noteId = req.params.note_id;
-  readFromFile('./db/db.json')
+  readFromFile(dbPath)
     .then((data) => JSON.parse(data))
     .then((json) => {
       // Make a new array of all notes except the one with the ID provided in the URL
       const result = json.filter((note) => note.note_id !== noteId);
 
       // Save that array to the filesystem
-      readAndAppend(result, './db/db.json'); // <-- Change this line
+      writeToFile(dbPath, result);
 
       // Respond to the DELETE request
       res.json(`Item ${noteId} has been deleted 🗑️`);
     });
 });
-
 
 // POST Route for a new note
 notes.post('/', (req, res) => {
@@ -62,12 +54,21 @@ notes.post('/', (req, res) => {
       note_id: uuidv4(),
     };
 
-    readAndAppend(newNote, './db/db.json');
-    res.json(`Note added successfully`);
+    // Read existing notes, append the new note, and write the updated data to the file
+    readFromFile(dbPath)
+      .then((data) => JSON.parse(data))
+      .then((json) => {
+        json.push(newNote);
+        return writeToFile(dbPath, json);
+      })
+      .then(() => res.json(`Note added successfully`))
+      .catch((err) => res.status(500).json('Error in adding note'));
   } else {
-    res.error('Error in adding note');
+    res.status(400).json('Error in adding note');
   }
 });
+
+module.exports = notes;
 
 
 
