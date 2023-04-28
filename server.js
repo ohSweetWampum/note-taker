@@ -17,7 +17,8 @@ const notesRoutes = require('./routes/apiRoutes');
 
 // Use the imported routes
 app.use('/', htmlRoutes);
-app.use('/api/notes', notesRoutes);
+app.use('/', notesRoutes);
+
 
 // Add listener/start the server
 app.listen(PORT, () => console.log(`App listening at http://localhost:${PORT}`));
