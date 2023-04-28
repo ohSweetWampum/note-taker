@@ -24,7 +24,16 @@ async function readAndAppend(content, filePath) {
   }
 }
 
+async function writeToFile(filePath, content) {
+  try {
+    await writeFile(filePath, JSON.stringify(content, null, 4));
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 module.exports = {
   readFromFile,
-  readAndAppend
+  readAndAppend,
+  writeToFile,
 };

@@ -3,7 +3,8 @@ const path = require('path');
 const express = require('express');
 const notes = express.Router({mergeParams: true});
 
-const { readFromFile, writeToFile } = require('../helpers/notesHelper.js');
+const { readFromFile, readAndAppend, writeToFile } = require('../helpers/notesHelper.js');
+
 const dbPath = path.join(__dirname, '../db/db.json');
 
 // GET Route for retrieving all the notes
@@ -24,6 +25,31 @@ notes.get('/api/notes/:note_id', (req, res) => {
     });
 });
 
+
+
+// POST Route for a new note
+notes.post('/', (req, res) => {
+  console.log(req.body);
+
+  const { title, text } = req.body;
+
+  if (req.body) {
+    const newNote = {
+      title: title,
+      text: text,
+      note_id: uuidv4(),
+    };
+
+    // Use the helper function to read and append the new note
+    readAndAppend(newNote, dbPath)
+      .then(() => res.json(`Note added successfully`))
+      .catch((err) => res.status(500).json('Error in adding note'));
+  } else {
+    res.status(400).json('Error in adding note');
+  }
+});
+
+
 // DELETE Route for a specific note
 notes.delete('/api/notes/:note_id', (req, res) => {
   const noteId = req.params.note_id;
@@ -41,35 +67,6 @@ notes.delete('/api/notes/:note_id', (req, res) => {
     });
 });
 
-// POST Route for a new note
-notes.post('/api/notes', (req, res) => {
-  console.log(req.body);
-
-  const { title, text } = req.body;
-
-  if (req.body) {
-    const newNote = {
-      title: title,
-      text: text,
-      note_id: uuidv4(),
-    };
-
-    // Read existing notes, append the new note, and write the updated data to the file
-    readFromFile(dbPath)
-      .then((data) => JSON.parse(data))
-      .then((json) => {
-        json.push(newNote);
-        return writeToFile(dbPath, json);
-      })
-      .then(() => res.json(`Note added successfully`))
-      .catch((err) => {
-        console.error(err); // Log the error to the console
-        res.status(500).json(`Error in adding note`);
-      });
-  } else {
-    res.status(400).json('Error in adding note');
-  }
-});
 
 module.exports = notes;
 
