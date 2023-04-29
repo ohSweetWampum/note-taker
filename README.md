@@ -4,15 +4,15 @@ A note taker
 
 ## Website
 
-[Cleck Here to Visit the Deployed Site](https://ohsweetwampum.github.io/note-taker/)
+[Cleck Here to Visit the Deployed Site](https://mtg-note-taker.herokuapp.com/)
 
 ## Description
 
-This app displays the current day's weather as weel as the 5-day forecast for a particular city. You can search a city and the weather data will be displayed. Below the search box is an area for your recently searched citites so all you have to do is click on the city button and it's weather will be displayed. This app is quick to use and only gives essential up to date weather data.
+This Note Taker App is a web application designed for creating, keeping track of, and deleting notes. It was built using Node.js and Express.js and Heroku, it also employs file-based storage (JSON). Key features include creating notes, viewing a list of saved notes, and deleting notes. Overall, this app offers a reliable note-taking solution, easily accessible and manageable, with a foundation suitable for future expansions and features such as making edits to existing notes.
 
 ## Installation
 
-d
+You need to have Node.js and Express.js installed. In your terminal, navigate to the folder that contains the server.js file and enter "npm start" in the command line.
 
 ## Table of Contents
 
@@ -27,23 +27,22 @@ d
 - [Author](#author)
 - [Credits](#credits)
 - [Contributing](#Contributing)
-- [Tests](#tests)
 - [Questions](#questions)
 - [License](#license)
 
 ## Technology
 
-- OpenWeatherAPIs
-  [Learn about OpenWeather](https://openweathermap.org/api)
+- Express.js
+  [Learn about Express.js](https://expressjs.com/)
 
-- Bootstrap
-  [Learn about Bootstrap](https://getbootstrap.com/)
+- Node.js
+  [Learn about Node.js](https://nodejs.org/en)
 
-- Day.js
-  [Learn about Day.js](https://day.js.org/)
+- Heroku
+  [Learn about Heroku](https://www.heroku.com/home)
 
-- jQuery
-  [Learn about jQuery](https://jquery.com/)
+- Insomnia
+  [Learn about Insomnia](https://insomnia.rest/)
 
 - JavaScript
   [Learn about JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -59,37 +58,48 @@ d
 
 ## Usage
 
-1. Enter a city in the search box, click "add city"
-2. Weather data will then pop up
-3. Your recently searched for cities will populate as buttons below the search box, you can click on these buttons to see the citie's weather data instead of searching again
+1. Click the "Get Started" button
+2. Enter the notes title and then text contents, click the save icon in the upper right.
+3. Click the trash icon on an existing note to delete it
 
 # Demo
 
-![Alt Text](./images/gifs/123.png)
+![Alt Text](/images/2023-04-28%2020.02.35.gif)
 
 ## Code
 
-I wanted to highlight this code snippet because I think it might be the first time I added html elements withing my JavaScript in this particular way and I just that it was neat.all the data (forecastDate, iconUrl, highTemp, lowTemp, wind speed and humidity) values are inserted using string concatenation.
+I wanted to highlight this code snippet because it shows a helper function in action, and helper functions can ber very useful. Helper functions offer many benefits, such as improved code reusability, organization, error handling, and testing. By encapsulating a file reading logic in a helper function, the same code can be reused across multiple routes. This separation duties simplifies debugging and maintenance. Centralizing file reading logic enables consistent error handling, and any changes made will affect all parts of the application using the helper function. Here I have an example of using a helper function ( readFromFile) inside the delete note route, but I use this same function else wher in the code.
 
 ```JavaScript
-  var card = document.createElement("div");
-      card.classList.add("col");
-      card.innerHTML = '<div class="card border-dark bg-white"><div class="card-body">' +
-        '<h5 class="card-title">' + forecastDate + '</h5>' +
-        '<img src="' + iconUrl + '">' +
-        '<p class="card-text">High: ' + highTemp + '°F</p>' +
-        '<p class="card-text">Low: ' + lowTemp + '°F</p>' +
-        '<p class="card-text">Wind: ' + forecastsForDate[0].wind.speed + ' mph</p>' +
-        '<p class="card-text">Humidity: ' + forecastsForDate[0].main.humidity + '%</p>' +
-        '</div></div>';
+// DELETE Route for a specific note
+notes.delete('/notes/:id', (req, res) => {
+  const noteId = req.params.id;
+  console.log(noteId);
+
+  // Use the helper function to read from the file
+  readFromFile(dbPath)
+    .then((data) => JSON.parse(data))
+    .then((json) => {
+      // Make a new array of all notes except the one with the ID provided in the URL
+      const result = json.filter((note) => note.id !== noteId);
+
+      // Save that array to the filesystem using the helper function
+      writeToFile(dbPath, result);
+
+      // Respond to the DELETE request
+      res.json(`Item ${noteId} has been deleted `);
+    });
+});
+
 ```
 
 ## Learning
 
-- Furthered knowledge of local storage, saving and retrieving
-- Learned how to use the spread operator
-- learned how to utilize 3rd party APIs, calling, response, etc.
-- Learned how add icons
+- Learned how to create an app on Heroku
+- Learned how to utilize route specific files and helper function files
+- learned how to use Express.js and Node.js
+- Learned how use middleware and port listeners
+- Furthered knowledge of destructuring objects
 
 ## Author
 
@@ -101,24 +111,18 @@ Matthew Gibson
 
 ## Credits
 
-[meyerweb.com](https://meyerweb.com/eric/tools/css/reset/)
-(For my reset.css file)
+[www.geeksforgeeks.org](https://www.geeksforgeeks.org/what-are-the-helper-functions/)
+(Helper Functions)
 
-[mdnwebdocs.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
-(spread operator)
+[www.itsolutionstuff.com](https://www.itsolutionstuff.com/post/how-to-create-separate-routes-file-in-node-jsexample.html)
+(route files)
 
-[day.js.org](https://day.js.org/)
-(Day.js documents)
-
-[jQuery.com](https://jquery.com/)
-(jQuery Documents)
-
-[OpenWeatherMap.org](https://openweathermap.org/api)
-(weather APIs)
+[expressjs.com](https://expressjs.com/en/guide/using-middleware.html)
+(Middleware)
 
 ## Contributing
 
-## Tests
+If you would like to contribute, please contact me at [mtgibson888@gmail.com](mailto:mtgibson888@gmail.com)
 
 ## Questions
 
