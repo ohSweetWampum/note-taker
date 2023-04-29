@@ -1,3 +1,4 @@
+// Import required modules
 const path = require('path');
 const express = require('express');
 const router = express.Router();
@@ -14,5 +15,5 @@ router.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 }); 
 
-
+// Export the notes router for use in other modules
 module.exports = router;

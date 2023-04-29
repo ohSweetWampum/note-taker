@@ -1,19 +1,18 @@
+// Import required modules
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const express = require('express');
 const notes = express.Router();
-const {readFromFile, readAndAppend, writeToFile } = require("../helpers/notesHelper")
-
-// const { readFromFile, readAndAppend, writeToFile } = require('../helpers/notesHelper.js');
+const { readFromFile, readAndAppend, writeToFile } = require('../helpers/notesHelper');
 
 const dbPath = path.join(__dirname, '../db/db.json');
 
 // GET Route for retrieving all the notes
 notes.get('/notes', (req, res) => {
   console.log(dbPath);
+  // Use the helper function to read from the file and return the data as a JSON object
   readFromFile(dbPath).then((data) => res.json(JSON.parse(data)));
 });
-
 
 // POST Route for a new note
 notes.post('/notes', (req, res) => {
@@ -21,7 +20,9 @@ notes.post('/notes', (req, res) => {
 
   const { title, text } = req.body;
 
+  // Check if the request body has the necessary information
   if (req.body) {
+    // Create a new note object with a unique ID
     const newNote = {
       title: title,
       text: text,
@@ -37,18 +38,19 @@ notes.post('/notes', (req, res) => {
   }
 });
 
-
 // DELETE Route for a specific note
 notes.delete('/notes/:id', (req, res) => {
   const noteId = req.params.id;
-  console.log(noteId)
+  console.log(noteId);
+  
+  // Use the helper function to read from the file
   readFromFile(dbPath)
     .then((data) => JSON.parse(data))
     .then((json) => {
       // Make a new array of all notes except the one with the ID provided in the URL
       const result = json.filter((note) => note.id !== noteId);
 
-      // Save that array to the filesystem
+      // Save that array to the filesystem using the helper function
       writeToFile(dbPath, result);
 
       // Respond to the DELETE request
@@ -56,66 +58,9 @@ notes.delete('/notes/:id', (req, res) => {
     });
 });
 
-
+// Export the notes router for use in other modules
 module.exports = notes;
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const fs = require('fs');
-// const path = require('path');
-// const express = require('express');
-// const router = express.Router();
-// const dbPath = path.join(__dirname, '../db.json');
-
-// // Function to read notes data from the JSON file
-// const readNotes = () => {
-//   const notesData = fs.readFileSync(dbPath, 'utf8');
-//   return JSON.parse(notesData);
-// };
-
-
-// // Function to write notes data to the JSON file
-// const writeNotes = (notes) => {
-//   fs.writeFileSync(dbPath, JSON.stringify(notes));
-// };
-
-// // GET route for retrieving all notes
-// router.get('/notes', (req, res) => {
-//   const notes = readNotes();
-//   res.json(notes);
-// });
-
-// // POST route for adding a new note
-// router.post('/notes', (req, res) => {
-//   const notes = readNotes();
-//   const newNote = { ...req.body, id: Date.now() };
-//   notes.push(newNote);
-//   writeNotes(notes);
-//   res.json(newNote);
-// });
-
-// // DELETE route for deleting a note by ID
-// router.delete('/notes/:id', (req, res) => {
-//   const notes = readNotes();
-//   const noteId = parseInt(req.params.id);
-//   const updatedNotes = notes.filter((note) => note.id !== noteId);
-//   writeNotes(updatedNotes);
-//   res.json({ message: `Note with ID ${noteId} deleted` });
-// });
-
-// module.exports = router;
